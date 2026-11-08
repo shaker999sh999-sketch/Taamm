@@ -178,6 +178,12 @@ background:linear-gradient(135deg,#047857,#10b981);box-shadow:0 12px 26px rgba(4
 .ex{margin-top:10px;padding:10px 12px;border-radius:14px;background:#f0f9f5;color:#065f46;font-size:13px;font-weight:700;line-height:1.7}
 .sim{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid rgba(4,120,87,.12);font-weight:700;color:#35574c;font-size:14px}
 .sim .pill{flex:none;width:auto;padding:0 14px;height:38px;font-size:13px}
+.bk{margin-left:auto;flex:none;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.38);background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.10));color:#fff;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;box-shadow:0 4px 12px rgba(0,60,40,.18),inset 0 1px 0 rgba(255,255,255,.4);transition:transform .15s ease,background .15s ease}
+.bk:active{transform:scale(.92);background:rgba(255,255,255,.3)}
+.bk svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+#mapov{position:fixed;inset:0;z-index:60;background:#fff}#mapov iframe{width:100%;height:100%;border:0;display:block}
+.loc{display:flex;align-items:center;gap:12px;padding:12px 0 4px}.loc .lt{flex:1;font-weight:700;color:#0b3d2e;font-size:14px;line-height:1.6}.loc .lt small{display:block;font-weight:600;color:#526777;font-size:12px}
+.lb{flex:none;height:44px;padding:0 16px;border-radius:22px;border:1px solid rgba(255,255,255,.25);background:linear-gradient(180deg,#0a9a72,#047857);color:#fff;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 6px 14px rgba(4,120,87,.3),inset 0 1px 0 rgba(255,255,255,.3)}.lb:active{transform:scale(.96)}.lb svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 #toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 92px);transform:translate(-50%,20px);z-index:9;max-width:86vw;padding:12px 22px;border-radius:24px;color:#fff;font-weight:800;font-size:14.5px;text-align:center;background:linear-gradient(135deg,rgba(2,70,52,.97),rgba(4,110,80,.92));box-shadow:0 12px 26px rgba(2,60,44,.4);opacity:0;visibility:hidden;transition:opacity .25s ease,transform .3s ease}
 #toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
 .pc.na .pq{display:none}.pc.na .pimg{filter:grayscale(1) opacity(.5)}
@@ -235,6 +241,7 @@ background:linear-gradient(135deg,#047857,#10b981);box-shadow:0 12px 26px rgba(4
 <header id="topbar"><div class="row">
 <button class="chip" id="acctbtn" type="button"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></span><span>حسابي</span></button>
 <button class="chip" id="wallet" type="button"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H18a2 2 0 0 1 2 2v1"/><path d="M3 7.5V17a2.5 2.5 0 0 0 2.5 2.5H19a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2H5.5A2.5 2.5 0 0 1 3 7.5z"/><circle cx="16.5" cy="13" r="1.2"/></svg></span><span>محفظتي</span></button>
+<button class="bk" id="bk" type="button" aria-label="رجوع" hidden><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
 </div>
 </header>
 <div id="scrim"></div>
@@ -288,6 +295,7 @@ background:linear-gradient(135deg,#047857,#10b981);box-shadow:0 12px 26px rgba(4
 <h2 class="sec">ملخص طلبك</h2>
 <div class="ocard">
 <div id="olist"></div>
+<div class="loc" id="orowloc"><div class="lt" id="oloc"></div><button class="lb" id="omap" type="button"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span id="omapt">تحديد موقعي</span></button></div>
 <div class="orow"><span>المجموع الجزئي</span><b id="osub"></b></div>
 <div class="orow"><span>سعر التوصيل</span><b id="odel"></b></div>
 <div class="orow" id="orrow" hidden><span>تقريب للفئة النقدية</span><b id="orr"></b></div>
@@ -319,6 +327,7 @@ background:linear-gradient(135deg,#047857,#10b981);box-shadow:0 12px 26px rgba(4
 </div>
 <div class="lg-pad"></div>
 </div>
+<div id="mapov" hidden></div>
 <div id="toast"></div>
 <button id="cbar" type="button"><span class="cbl"><span class="cbi"><svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2.2l2.3 11h11.3l1.9-8H6.2"/></svg></span><span>إتمام الطلب</span></span><span class="cbs" id="csub">0 د.ع</span></button>
 <div id="bub"><span id="bt"></span></div>
@@ -486,11 +495,19 @@ for(var i=0;i<words.length;i++){if(tok!==my)return;bt.textContent+=(i?' ':'')+wo
 var rest=5000-(performance.now()-t0);if(rest>0)await wait(rest);
 if(tok!==my)return;bub.classList.remove('show');talk=false;await wait(20000);}}
 function stop(){tok++;bub.classList.remove('show');talk=false;}
-function route(){var h=location.hash,m=(h==='#maswak'),o=(h==='#order');
+var bkEl=document.getElementById('bk'),CURH,PREVH;
+function route(){var h=location.hash,m=(h==='#maswak'),o=(h==='#order');if(h!==CURH){PREVH=CURH;CURH=h;}bkEl.hidden=!(m||o);
 if(o&&!items().length){location.hash='maswak';return;}
 home.hidden=m||o;view.hidden=!m;order.hidden=!o;adm.hidden=!(ROLE==='admin'||ROLE==='support');
 if(adm.hidden&&PANEL==='admin')PANEL='veg';content.scrollTop=0;
 if(window.tammCharVisible)window.tammCharVisible(!(m||o)&&!window.__login);if(m)cycle();else stop();if(o)renderOrder();if(m)showPanel(PANEL);syncBar();}
+var mapov=document.getElementById('mapov'),mapMode=null;
+function openMap(mode){if(mode==='nav'){mapov.innerHTML='<iframe title="الخريطة" allow="geolocation" src="../assets/tamm-map/index.html"></iframe><button class="bk" id="mapx" type="button" aria-label="رجوع" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 150px);right:14px;margin:0;z-index:2;background:rgba(4,120,87,.92)"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>';mapov.hidden=false;mapMode='nav';document.getElementById('mapx').addEventListener('click',closeMap);return;}var p=mode==='store'?DB.cfg.store:DB.myloc;if(!okp(p))p=okp(DB.cfg.store)?DB.cfg.store:null;mapov.innerHTML='<iframe title="الخريطة" allow="geolocation" src="../assets/tamm-map/picker.html?mode='+mode+(p?'&lat='+p.lat+'&lng='+p.lng:'')+'"></iframe>';mapov.hidden=false;mapMode=mode;}
+function closeMap(){mapov.hidden=true;mapov.innerHTML='';mapMode=null;}
+function stLocRender(){var e=document.getElementById('stloc');if(e)e.innerHTML=okp(DB.cfg.store)?'محدَّد: '+DB.cfg.store.lat.toFixed(5)+' ، '+DB.cfg.store.lng.toFixed(5):'لم يُحدَّد بعد<small>مطلوب لحساب التوصيل؛ دونه لا يُتمّ المستخدم طلبه</small>';}
+window.addEventListener('message',function(e){var d=e.data;if(!d||!d.tamm||!mapMode||!mapov.firstChild||e.source!==mapov.firstChild.contentWindow)return;if(d.tamm==='cancel'){closeMap();return;}if(d.tamm==='pick'&&okp(d)){if(mapMode==='store'){DB.cfg.store={lat:d.lat,lng:d.lng};save();stLocRender();toast('تم حفظ موقع المخزن');}else{DB.myloc={lat:d.lat,lng:d.lng};save();toast('تم تحديد موقع التوصيل');}closeMap();if(location.hash==='#order')renderOrder();}});
+document.getElementById('omap').addEventListener('click',function(){openMap('home');});
+bkEl.addEventListener('click',function(){var t=location.hash==='#order'?'#maswak':'';if(PREVH===t)history.back();else location.hash=t.slice(1);});
 window.tammRoute=route;window.tammSetRole=function(r){ROLE=r;route();};window.tammRole=function(){return ROLE;};
 var KEY='tamm_maswak_v1',DAY=864e5,RET=45*DAY,STEP=.5,MAXQ=50;
 var pl=document.getElementById('plist'),order=document.getElementById('vOrder'),cbar=document.getElementById('cbar'),csub=document.getElementById('csub'),olist=document.getElementById('olist'),pO=document.getElementById('pOrders'),pC=document.getElementById('pChat'),pA=document.getElementById('pAdmin'),toastEl=document.getElementById('toast');
@@ -502,17 +519,21 @@ function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp
 function sel(v,x){return v===x?' selected':'';}
 function toast(t){toastEl.textContent=t;toastEl.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toastEl.classList.remove('show');},2600);}
 function seedDB(){var pr={};[].forEach.call(pl.querySelectorAll('.pc'),function(c){pr[c.getAttribute('data-id')]={name:c.getAttribute('data-name'),price:+c.getAttribute('data-price'),st:'on'};});
-return {v:1,seq:1000,cfg:{del:[750,1250,1500],extra:350,pct:10,disp:10,round:250,wait:5},prods:pr,orders:[],chats:{},sim:{avail:8}};}
+return {v:1,seq:1000,cfg:{del:[750,1250,1500],extra:350,pct:10,disp:10,round:250,wait:5,store:null},prods:pr,orders:[],chats:{},sim:{avail:8}};}
 var DB=null;try{DB=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){}
 var base=seedDB();if(!DB||typeof DB!=='object'||DB.v!==1)DB=base;else Object.keys(base.prods).forEach(function(k){if(!DB.prods[k])DB.prods[k]=base.prods[k];});
-DB.cfg.wait=DB.cfg.wait||5;DB.sim=DB.sim||{avail:8};DB.orders.forEach(function(o){if(!o.wave){o.wave=1;o.req=o.disp||DB.cfg.disp;o.sent=reach(o.req);o.nx=o.ts+DB.cfg.wait*60000;}if(o.ph===undefined)o.ph='';});
+DB.cfg.wait=DB.cfg.wait||5;delete DB.cfg.km;if(DB.cfg.store===undefined)DB.cfg.store=null;if(DB.myloc===undefined)DB.myloc=null;DB.sim=DB.sim||{avail:8};DB.orders.forEach(function(o){if(!o.wave){o.wave=1;o.req=o.disp||DB.cfg.disp;o.sent=reach(o.req);o.nx=o.ts+DB.cfg.wait*60000;}if(o.ph===undefined)o.ph='';});
 function save(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}}
 function purge(){var n=Date.now(),ch=false,keep=DB.orders.filter(function(o){return n-o.ts<=RET;}),ids={};if(keep.length!==DB.orders.length){DB.orders=keep;ch=true;}
 keep.forEach(function(o){ids[o.id]=1;});Object.keys(DB.chats).forEach(function(k){if(!ids[k]){delete DB.chats[k];ch=true;return;}var a=DB.chats[k].filter(function(m){return n-m.ts<=RET;});if(a.length!==DB.chats[k].length){DB.chats[k]=a;ch=true;}});if(ch)save();}
 purge();setInterval(purge,6e5);tick();setInterval(tick,5000);
 function items(){return [].map.call(pl.querySelectorAll('.pc'),function(c){return {id:c.getAttribute('data-id'),name:c.getAttribute('data-name'),price:+c.getAttribute('data-price'),q:+c.getAttribute('data-q')||0,img:c.querySelector('.pimg').src};}).filter(function(i){return i.q>0;});}
-function delFee(w,c){if(w<=0)return 0;if(w<=1)return c.del[0];if(w<=2)return c.del[1];if(w<=3)return c.del[2];return c.del[2]+c.extra*(w-3);}
-function calc(it){var sub=it.reduce(function(a,i){return a+Math.round(i.q*i.price);},0),w=it.reduce(function(a,i){return a+i.q;},0),del=Math.round(delFee(w,DB.cfg)),raw=sub+del,rd=DB.cfg.round,tot=rd>0?Math.ceil(raw/rd)*rd:raw;return {sub:sub,w:w,del:del,df:tot-raw,tot:tot};}
+function delFee(km,c){if(km<=0)return 0;if(km<=1)return c.del[0];if(km<=2)return c.del[1];if(km<=3)return c.del[2];return c.del[2]+c.extra*(km-3);}
+var ROAD=1.25;
+function okp(p){return !!p&&isFinite(p.lat)&&isFinite(p.lng);}
+function hav(a,b){var R=6371,r=Math.PI/180,x=Math.sin((b.lat-a.lat)*r/2),y=Math.sin((b.lng-a.lng)*r/2),h=x*x+Math.cos(a.lat*r)*Math.cos(b.lat*r)*y*y;return 2*R*Math.asin(Math.sqrt(h));}
+function distKm(){var s=DB.cfg.store;if(!okp(s)||!okp(DB.myloc))return null;return Math.max(0.1,Math.round(hav(s,DB.myloc)*ROAD*10)/10);}
+function calc(it){var sub=it.reduce(function(a,i){return a+Math.round(i.q*i.price);},0),km=distKm(),del=km===null?0:Math.round(delFee(km,DB.cfg)),raw=sub+del,rd=DB.cfg.round,tot=rd>0?Math.ceil(raw/rd)*rd:raw;return {sub:sub,km:km,need:km===null,del:del,df:tot-raw,tot:tot};}
 function syncBar(){var it=items(),on=!view.hidden&&PANEL==='veg'&&it.length>0;csub.textContent=fmt(calc(it).sub)+' د.ع';cbar.classList[on?'add':'remove']('show');content.classList[on?'add':'remove']('hasbar');}
 function applyProducts(){[].forEach.call(pl.querySelectorAll('.pc'),function(c){var p=DB.prods[c.getAttribute('data-id')];if(!p)return;
 c.querySelector('.pn').textContent=p.name;c.setAttribute('data-name',p.name);c.setAttribute('data-price',String(p.price));c.querySelector('.pp').textContent=fmt(p.price)+' د.ع / كيلو';
@@ -521,8 +542,8 @@ if(off){c.setAttribute('data-q','0');c.querySelector('.qn').textContent='0';c.cl
 function clearCart(){[].forEach.call(pl.querySelectorAll('.pc'),function(c){c.setAttribute('data-q','0');c.querySelector('.qn').textContent='0';c.classList.remove('on');});}
 function renderOrder(){var it=items(),t=calc(it);
 olist.innerHTML=it.map(function(i){return '<div class="oi"><div class="oinf"><div class="on">'+esc(i.name)+'</div><div class="od">'+qtxt(i.q)+' كيلو × '+fmt(i.price)+' د.ع</div></div><div class="ol">'+fmt(Math.round(i.q*i.price))+' د.ع</div><img class="oim" alt="" src="'+i.img+'"></div>';}).join('');
-document.getElementById('osub').textContent=fmt(t.sub)+' د.ع';document.getElementById('odel').textContent=fmt(t.del)+' د.ع';
-document.getElementById('orrow').hidden=!(t.df>0);document.getElementById('orr').textContent=fmt(t.df)+' د.ع';document.getElementById('otot').textContent=fmt(t.tot)+' د.ع';}
+document.getElementById('osub').textContent=fmt(t.sub)+' د.ع';document.getElementById('odel').textContent=t.need?'—':fmt(t.del)+' د.ع';
+document.getElementById('orrow').hidden=!(t.df>0)||t.need;document.getElementById('orr').textContent=fmt(t.df)+' د.ع';document.getElementById('otot').textContent=t.need?'—':fmt(t.tot)+' د.ع';document.getElementById('oloc').innerHTML=t.need?'حدّد موقع بيتك لنحسب لك سعر التوصيل':'المسافة من المخزن: '+t.km+' كم<small>مسافة تقديرية بالطريق</small>';document.getElementById('omapt').textContent=okp(DB.myloc)?'تغيير الموقع':'تحديد موقعي';}
 // ---- الطلبات والدردشة ----
 function dstr(ts){var d=new Date(ts),p=function(n){return n<10?'0'+n:n;};return d.getDate()+'/'+(d.getMonth()+1)+' · '+p(d.getHours())+':'+p(d.getMinutes());}
 function stText(o){var c=o.cap?('الكابتن '+o.cap):'';if(o.st==='search'){if(o.sent<=0)return 'لا يوجد كباتن متاحون حالياً، سنعيد المحاولة تلقائياً'+(o.wave>1?' (المحاولة '+o.wave+')':'');return o.wave>1?'لم يقبل أحد بعد، وسّعنا البحث وأرسلنا طلبك إلى '+o.sent+' كابتن (المحاولة '+o.wave+')':'جارٍ إرسال طلبك إلى أقرب '+o.sent+' كابتن…';}if(o.st==='acc')return c+' متوجه لاستلام طلبك';if(o.st==='way')return c+' في طريقه إليك';return 'تم تسليم طلبك';}
@@ -551,18 +572,19 @@ save();rerender();}
 // ---- الإدارة ----
 function gv(id){var el=document.getElementById(id);return el?(+el.value||0):0;}
 function admEx(){var e1=document.getElementById('dex'),e2=document.getElementById('pex');if(!e1||!e2)return;var c={del:[gv('d1'),gv('d2'),gv('d3')],extra:gv('dxt')};
-var R=function(w){return fmt(Math.round(delFee(w,c)));};e1.textContent='أمثلة: 1 كيلو = '+R(1)+' · 2 كيلو = '+R(2)+' · 3 كيلو = '+R(3)+' · 3.5 كيلو = '+R(3.5)+' · 4.25 كيلو = '+R(4.25)+' · 6 كيلو = '+R(6)+' د.ع';
+var R=function(k){return fmt(Math.round(delFee(k,c)));};e1.textContent='أمثلة: 1 كم = '+R(1)+' · 2 كم = '+R(2)+' · 3 كم = '+R(3)+' · 3.5 كم = '+R(3.5)+' · 4.25 كم = '+R(4.25)+' · 6 كم = '+R(6)+' د.ع';
 var p=Math.max(0,Math.min(100,gv('pct'))),f=delFee(2,c),cut=Math.round(f*p/100);e2.textContent='مثال: على توصيل '+fmt(f)+' د.ع ← حصة التطبيق '+fmt(cut)+' د.ع وحصة الكابتن '+fmt(f-cut)+' د.ع';}
 function renderSim(){var el=document.getElementById('sim');if(!el)return;var act=DB.orders.filter(function(o){return o.st!=='done';});
 el.innerHTML=act.length?act.map(function(o){var lab=o.st==='search'?'قبول كابتن للطلب':o.st==='acc'?'الكابتن استلم وانطلق':'تم التسليم';return '<div class="sim"><span>'+o.id+' · '+BD[o.st]+(o.st==='search'?' · المحاولة '+o.wave+' ('+o.sent+' كابتن)':'')+'</span><span class="sb">'+(o.st==='search'?'<button class="pill" type="button" data-wv="'+o.id+'">مرّت المهلة</button>':'')+'<button class="pill" type="button" data-adv="'+o.id+'">'+lab+'</button></span></div>';}).join(''):'<div class="note">لا توجد طلبات نشطة. أرسل طلباً من «الخضار» أولاً.</div>';}
 function renderAdmin(){var c=DB.cfg,ids=Object.keys(DB.prods);
 pA.innerHTML='<h3 class="gt2">المنتجات</h3><div class="ocard adm"><div class="ah"><span>الاسم</span><span>السعر (د.ع/كيلو)</span><span>الحالة</span></div>'+ids.map(function(id){var p=DB.prods[id];return '<div class="ar" data-id="'+id+'"><input class="in n" type="text" maxlength="30" value="'+esc(p.name)+'" aria-label="الاسم"><input class="in pr" type="number" inputmode="numeric" min="0" step="50" value="'+p.price+'" aria-label="السعر"><select class="in st" aria-label="الحالة"><option value="on"'+sel(p.st,'on')+'>متوفر</option><option value="na"'+sel(p.st,'na')+'>غير متوفر</option><option value="soon"'+sel(p.st,'soon')+'>قريباً</option><option value="hide"'+sel(p.st,'hide')+'>مخفي</option></select></div>';}).join('')+'</div>'
-+'<h3 class="gt2">قاعدة التوصيل (حسب وزن الطلب)</h3><div class="ocard adm"><div class="af"><label>حتى 1 كيلو</label><input class="in" id="d1" type="number" inputmode="numeric" min="0" value="'+c.del[0]+'"></div><div class="af"><label>حتى 2 كيلو</label><input class="in" id="d2" type="number" inputmode="numeric" min="0" value="'+c.del[1]+'"></div><div class="af"><label>حتى 3 كيلو</label><input class="in" id="d3" type="number" inputmode="numeric" min="0" value="'+c.del[2]+'"></div><div class="af"><label>كل كيلو إضافي بعد الثالث يزيد (ويُقسَّم على أجزاء الكيلو)</label><input class="in" id="dxt" type="number" inputmode="numeric" min="0" value="'+c.extra+'"></div><div class="ex" id="dex"></div></div>'
++'<h3 class="gt2">قاعدة التوصيل (حسب المسافة بالكيلومتر)</h3><div class="ocard adm"><div class="af"><label>حتى 1 كم</label><input class="in" id="d1" type="number" inputmode="numeric" min="0" value="'+c.del[0]+'"></div><div class="af"><label>حتى 2 كم</label><input class="in" id="d2" type="number" inputmode="numeric" min="0" value="'+c.del[1]+'"></div><div class="af"><label>حتى 3 كم</label><input class="in" id="d3" type="number" inputmode="numeric" min="0" value="'+c.del[2]+'"></div><div class="af"><label>كل كيلومتر إضافي بعد الثالث يزيد (ويُقسَّم على أجزاء الكيلومتر)</label><input class="in" id="dxt" type="number" inputmode="numeric" min="0" value="'+c.extra+'"></div><div class="ex" id="dex"></div></div>'
++'<h3 class="gt2">موقع مخزن الشركة</h3><div class="ocard adm"><div class="loc"><div class="lt" id="stloc"></div><button class="lb" id="stmap" type="button"><svg viewBox=\"0 0 24 24\"><path d=\"M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z\"/><circle cx=\"12\" cy=\"10\" r=\"2.5\"/></svg><span>تحديد على الخريطة</span></button></div><div class="loc"><div class="lt">معاينة الخريطة الكاملة والملاحة<small>للاطلاع فقط؛ الملاحة الفعلية تحتاج خادم توجيه</small></div><button class="lb" id="navmap" type="button"><span>فتح</span></button></div><div class="ex">هذا الموقع للحساب فقط ولا يظهر للمستخدم: تُحسب المسافة بينه وبين موقع بيت المستخدم ثم تُطبَّق قاعدة التوصيل أعلاه</div></div>'
 +'<h3 class="gt2">الكباتن والنسبة</h3><div class="ocard adm"><div class="af"><label>نسبة التطبيق من أجرة الكابتن (%)</label><input class="in" id="pct" type="number" inputmode="decimal" min="0" max="100" value="'+c.pct+'"></div><div class="ex" id="pex"></div><div class="af"><label>عدد أقرب الكباتن الذين يصلهم الطلب</label><input class="in" id="disp" type="number" inputmode="numeric" min="1" max="50" value="'+c.disp+'"></div><div class="af"><label>مهلة إعادة الإرسال بمضاعفة العدد (دقائق)</label><input class="in" id="wt" type="number" inputmode="numeric" min="1" value="'+c.wait+'"></div><div class="af"><label>(محاكاة) عدد الكباتن المتاحين الآن</label><input class="in" id="sav" type="number" inputmode="numeric" min="0" value="'+DB.sim.avail+'"></div></div>'
 +'<h3 class="gt2">التسعير</h3><div class="ocard adm"><div class="af"><label>تقريب الإجمالي لأقرب (د.ع) — صفر لإلغاء التقريب</label><input class="in" id="rnd" type="number" inputmode="numeric" min="0" value="'+c.round+'"></div></div>'
 +'<button class="okb" id="admsave" type="button"><span>حفظ التغييرات</span></button>'
 +'<h3 class="gt2">محاكاة الكابتن (للمعاينة فقط)</h3><div class="ocard adm" id="sim"></div><div class="note">هذه المحاكاة تحل مكان تطبيق الكابتن الذي لم يُبنَ بعد، وتُحذف عند بنائه. بيانات التطبيق تُحفظ في هذا المتصفح فقط حتى نبني السيرفر. مدة الاحتفاظ بالطلبات والمحادثات 45 يوماً ثابتة.</div>';
-admEx();renderSim();}
+admEx();renderSim();stLocRender();}
 function admSave(){var c=DB.cfg;[].forEach.call(pA.querySelectorAll('.ar'),function(r){var p=DB.prods[r.getAttribute('data-id')];if(!p)return;var nm=r.querySelector('.n').value.trim();if(nm)p.name=nm.slice(0,30);p.price=Math.max(0,Math.round(+r.querySelector('.pr').value||0));p.st=r.querySelector('.st').value;});
 c.del=[Math.max(0,Math.round(gv('d1'))),Math.max(0,Math.round(gv('d2'))),Math.max(0,Math.round(gv('d3')))];c.extra=Math.max(0,Math.round(gv('dxt')));c.pct=Math.max(0,Math.min(100,gv('pct')));c.disp=Math.max(1,Math.min(50,Math.round(gv('disp'))||10));c.round=Math.max(0,Math.round(gv('rnd')));c.wait=Math.max(1,Math.round(gv('wt'))||5);DB.sim.avail=Math.max(0,Math.round(gv('sav')));
 save();applyProducts();toast('تم حفظ إعدادات القسم');renderAdmin();}
@@ -576,10 +598,9 @@ pO.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest
 pC.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button');if(!b)return;if(b.getAttribute('data-back')){CHAT=null;renderChat();return;}if(b.getAttribute('data-send')){sendMsg();return;}var id=b.getAttribute('data-chat');if(id){CHAT=id;renderChat();}});
 pC.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target&&e.target.id==='chin')sendMsg();});
 pA.addEventListener('input',admEx);
-pA.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button');if(!b)return;if(b.id==='admsave'){admSave();return;}var a=b.getAttribute('data-adv');if(a){advance(a);return;}var w=b.getAttribute('data-wv');if(w)forceWave(w);});
+pA.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button');if(!b)return;if(b.id==='admsave'){admSave();return;}if(b.id==='stmap'){openMap('store');return;}if(b.id==='navmap'){openMap('nav');return;}var a=b.getAttribute('data-adv');if(a){advance(a);return;}var w=b.getAttribute('data-wv');if(w)forceWave(w);});
 cbar.addEventListener('click',function(){location.hash='order';});
-document.getElementById('okbtn').addEventListener('click',function(){var it=items();if(!it.length)return;if(ROLE==='guest'){toast('سجّل حساباً لإتمام الطلب');if(window.tammShowLogin)window.tammShowLogin('reg');return;}var t=calc(it);
-DB.orders.unshift({id:'#'+(++DB.seq),ts:Date.now(),items:it.map(function(i){return {id:i.id,name:i.name,q:i.q,price:i.price};}),sub:t.sub,del:t.del,rnd:t.df,total:t.tot,st:'search',cap:null,disp:DB.cfg.disp,wave:1,req:DB.cfg.disp,sent:reach(DB.cfg.disp),nx:Date.now()+DB.cfg.wait*60000,ph:(window.tammUser||''),app:Math.round(t.del*DB.cfg.pct/100)});
+document.getElementById('okbtn').addEventListener('click',function(){var it=items();if(!it.length)return;if(ROLE==='guest'){toast('سجّل حساباً لإتمام الطلب');if(window.tammShowLogin)window.tammShowLogin('reg');return;}var t=calc(it);if(t.need){if(!okp(DB.cfg.store)){toast('التوصيل غير متاح حالياً، حاول لاحقاً');return;}toast('حدّد موقع التوصيل أولاً');openMap('home');return;}DB.orders.unshift({id:'#'+(++DB.seq),ts:Date.now(),items:it.map(function(i){return {id:i.id,name:i.name,q:i.q,price:i.price};}),sub:t.sub,del:t.del,rnd:t.df,total:t.tot,st:'search',cap:null,disp:DB.cfg.disp,wave:1,req:DB.cfg.disp,sent:reach(DB.cfg.disp),nx:Date.now()+DB.cfg.wait*60000,ph:(window.tammUser||''),app:Math.round(t.del*DB.cfg.pct/100),km:t.km,loc:(okp(DB.cfg.store)&&okp(DB.myloc))?{lat:DB.myloc.lat,lng:DB.myloc.lng}:null});
 save();clearCart();PANEL='orders';toast('تم إرسال طلبك إلى الكباتن');location.hash='maswak';});
 window.tammToast=toast;window.tammClearCart=function(){clearCart();syncBar();};
 applyProducts();
